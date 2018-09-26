@@ -58,7 +58,7 @@
       "encode": {
         "enter": { "tooltip": {"signal": "'State:'+ datum.State_Abv +' Amount:' + format(datum.Amount,',d')"}},
         "update": { "fill": {"scale": "color", "field": "Amount"} },
-        "hover": { "fill": {"value": "darkgreen"} }
+        "hover": { "fill": {"value": "darkred"} }
       },
       "transform": [
         { "type": "geoshape", "projection": "projection" }
