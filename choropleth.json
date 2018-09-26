@@ -1,0 +1,64 @@
+{
+ "$schema": "https://vega.github.io/schema/vega/v4.json",
+ "width": 1000,
+ "height": 500,
+ "autosize": "none",
+
+ "data": [
+   {
+     "name": "UsLosses",
+     "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableay-vega/master/losses2015_transformed.csv",
+     "format": {"type": "csv", "parse": "auto"}
+   },
+   {
+     "name": "states",
+     "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableay-vega/master/us-10m.json",
+     "format": {"type": "topojson", "feature": "states"},
+     "transform": [
+       {  "type": "lookup", "from": "UsLosses", "key": "State_Code", "fields": ["id"], "values": ["Amount","State_Abv"] },
+       { "type": "filter", "expr": "datum.Amount != null" }
+      
+     ]
+   }
+ ],
+
+ "projections": [
+   {
+     "name": "projection",
+     "type": "albersUsa"
+   }
+ ],
+
+ "scales": [
+   {
+     "name": "color",
+     "type": "quantize",
+     "domain": [0, 284640],
+     "range": {"scheme": "blues", "count": 15}
+   }
+ ],
+
+ "legends": [
+   {
+     "fill": "color",
+     "orient": "bottom-right",
+     "title": "Losses",
+     "format": "0"
+   }
+ ],
+
+ "marks": [
+   {
+     "type": "shape",
+     "from": {"data": "states"},
+     "encode": {
+       "enter": { "tooltip": {"signal": "format(datum.Amount, '0')"}},
+       "update": { "fill": {"scale": "color", "field": "Amount"} },
+       "hover": { "fill": {"value": "darkgreen"} }
+     },
+     "transform": [
+       { "type": "geoshape", "projection": "projection" }
+     ]
+   }
+ ]
+}
