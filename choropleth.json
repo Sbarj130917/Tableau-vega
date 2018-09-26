@@ -1,64 +1,69 @@
 {
- "$schema": "https://vega.github.io/schema/vega/v4.json",
- "width": 1000,
- "height": 500,
- "autosize": "none",
+  "$schema": "https://vega.github.io/schema/vega/v4.json",
+  "width": 960,
+  "height": 500,
+  "autosize": "none",
+  "data": [
+    {
+      "name": "losses",
+      "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableau-vega/master/losses2015_transformed.csv",
+      "format": {"type": "csv", "parse": "auto"},
+      "transform": [{
+  "type": "aggregate",
+  "fields": ["Amount"],
+  "groupby": ["State_Code","State_Abv"],
+  "ops": ["sum"],
+  "as": ["Amount"]
+}]
+    },
+    {
+      "name": "states",
+      "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableau-vega/master/us-10m.json",
+      "format": {"type": "topojson", "feature": "states"},
+      "transform": [
+        { "type": "lookup", "from": "losses", "key": "State_Code", "fields": ["id"], "values": ["State_Code","Amount","State_Abv"] },
+        { "type": "filter", "expr": "datum.Amount != null" }
+      ]
+    }
+  ],
 
- "data": [
-   {
-     "name": "UsLosses",
-     "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableau-vega/master/losses2015_transformed.csv",
-     "format": {"type": "csv", "parse": "auto"}
-   },
-   {
-     "name": "states",
-     "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableau-vega/master/us-10m.json",
-     "format": {"type": "topojson", "feature": "states"},
-     "transform": [
-       {  "type": "lookup", "from": "UsLosses", "key": "State_Code", "fields": ["id"], "values": ["Amount","State_Abv"] },
-       { "type": "filter", "expr": "datum.Amount != null" }
-      
-     ]
-   }
- ],
+  "projections": [
+    {
+      "name": "projection",
+      "type": "albersUsa"
+    }
+  ],
 
- "projections": [
-   {
-     "name": "projection",
-     "type": "albersUsa"
-   }
- ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "quantize",
+      "domain": [0, 100000000],
+      "range": {"scheme": "blues", "count": 50}
+    }
+  ],
 
- "scales": [
-   {
-     "name": "color",
-     "type": "quantize",
-     "domain": [0, 284640],
-     "range": {"scheme": "blues", "count": 15}
-   }
- ],
+  "legends": [
+    {
+      "fill": "color",
+      "orient": "bottom-right",
+      "title": "Amount"
+    }
+  ],
 
- "legends": [
-   {
-     "fill": "color",
-     "orient": "bottom-right",
-     "title": "Losses",
-     "format": "0"
-   }
- ],
+  "marks": [
+    {
+      "type": "shape",
+      "from": {"data": "states"},
+      "encode": {
+        "enter": { "tooltip": {"signal": "'State:'+ datum.State_Abv +' Amount:' + format(datum.Amount,',d')"}},
+        "update": { "fill": {"scale": "color", "field": "Amount"} },
+        "hover": { "fill": {"value": "red"} }
+      },
+      "transform": [
+        { "type": "geoshape", "projection": "projection" }
 
- "marks": [
-   {
-     "type": "shape",
-     "from": {"data": "states"},
-     "encode": {
-       "enter": { "tooltip": {"signal": "format(datum.Amount, '0')"}},
-       "update": { "fill": {"scale": "color", "field": "Amount"} },
-       "hover": { "fill": {"value": "darkgreen"} }
-     },
-     "transform": [
-       { "type": "geoshape", "projection": "projection" }
-     ]
-   }
- ]
+      ]
+    }
+  ]
 }
