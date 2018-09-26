@@ -1,0 +1,17 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+  "description": "Bar chart showing the sum aggregated losses for all the states",
+  "width": 700,
+  "data": { "url": "https://raw.githubusercontent.com/ShailyBarjatya/Tableay-vega/master/losses2015_transformed.csv"},
+  "title": "Losses 2015 of All states in US",
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "Damage_Descp", "type": "ordinal", "title": "Damage Description", "sort": {"op": "mean", "field": "Amount", "order": "ascending"},
+      "scale": {"rangeStep": 17}
+    },
+    "x": {
+      "aggregate": "mean", "field": "Amount", "type": "quantitative", "axis": {"title": "Total loss amount"}
+    }
+  }
+}
