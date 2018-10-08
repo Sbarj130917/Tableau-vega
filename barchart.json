@@ -7,11 +7,11 @@
   "mark": "bar",
   "encoding": {
     "y": {
-      "field": "Damage_Descp", "type": "ordinal", "title": "Damage Description", "sort": {"op": "mean", "field": "Amount", "order": "ascending"},
+      "field": "Damage_Descp", "type": "ordinal", "title": "Damage Description", "sort": {"op": "sum", "field": "Amount", "order": "ascending"},
       "scale": {"rangeStep": 17}
     },
     "x": {
-      "aggregate": "mean", "field": "Amount", "type": "quantitative", "axis": {"title": "Total loss amount"}
+      "aggregate": "sum", "field": "Amount", "type": "quantitative", "axis": {"title": "Total loss amount"}
     }
   }
 }
